@@ -40,11 +40,11 @@ pub fn decompose<F: PrimeField>(e: F, number_of_limbs: usize, bit_len: usize) ->
 
 pub fn decompose_big<F: PrimeField>(e: big_uint, number_of_limbs: usize, bit_len: usize) -> Vec<F> {
     let mut e = e;
-    let mask = big_uint::from(1usize).shl(bit_len) - 1usize;
+    let mask = (big_uint::from(1usize) << bit_len) - 1usize;
     let limbs: Vec<F> = (0..number_of_limbs)
         .map(|_| {
-            let limb = mask.clone() & e.clone();
-            e = e.clone() >> bit_len;
+            let limb = &e & &mask;
+            e >>= bit_len;
             big_to_fe(limb)
         })
         .collect();
